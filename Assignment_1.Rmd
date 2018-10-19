@@ -19,7 +19,7 @@ x=rnorm(100, mean = 0, sd = 1)
 eps = rnorm(100,mean=0,sd = 0.25)
 ```
 <br/>
-*(c) Using x and eps, generate a vector y according to the model Y = −1+0.5X+ε.*
+*(c) Using x and eps, generate a vector y according to the model Y = -1+0.5X+ε.*
 ```{r}
 y = -1+0.5*x + eps
 length(y)
@@ -32,38 +32,133 @@ plot(y~x)
 ```
 The graph ploted above shows a linear relationship between Y and X. <br/>
 <br/>
-*(e) Fit a least squares linear model to predict y using x. Comment on the model obtained. How do β ˆ 0 and β ˆ 1 compare to β^o and β^1 ?*
+*(e) Fit a least squares linear model to predict y using x. Comment on the model obtained. How do βˆ0 and ?βˆ1 compare to β^o and β^1 ?*
 ```{r}
 lm.fit = lm(y~x)
 summary(lm.fit)
 ```
+The linear regression fits very closely to the true value of the coefficients it was constructed from. The model has a large F-Statistic value and with a near zero p-value.
 <br/>
 *(f) Display the least squares line on the scatterplot obtained in (d). Draw the population regression line on the plot, in a different color. Use the legend() command to create an appropriate legend.*
-
-
-
-```{r}
-plot(y~x); abline(lm.fit, col = "red")
-legend("bottomright", c("Regression line"), lwd=1, col="red",bty ="n")
-```
-<br/>
-*(f) Now fit a polynomial regression model that predicts y using x and x 2 . Is there evidence that the quadratic term improves the model fit? Explain your answer.*
-
 ```{r}
 plot(x,y)
 abline(lm.fit,lwd=3,col=2)
 abline(-1,0.5,lwd=3,col=3)
-legend(-1, legend = c("model fit", "pop.regression"), col=2:3,lwd=3)
+legend(-1, legend = c("Model Fit", "Pop Reg"), col=2:3,lwd=3)
+```
+<br/>
+*(g) Now fit a polynomial regression model that predicts y using x and x 2 . Is there evidence that the quadratic term improves the model fit? Explain your answer.*
+
+```{r}
+lm.fit_sq = lm(y~x + I(x^2))
+summary(lm.fit_sq)
+```
+<br/>
+*(h) Repeat (a)–(f) after modifying the data generation process in such a way that there is less noise in the data. The model (1) should remain the same. You can do this by decreasing the variance of the normal distribution used to generate the error term ε in (b). Describe your results.*
+```{r}
+set.seed(3876)
+eps1 = rnorm(100, 0, 0.125)
+x1 = rnorm(100)
+y1 = -1 + .5*x1 + eps1
+plot(x1,y1)
+lm.fit1 = lm(y1~x1)
+summary(lm.fit1)
+
+abline(lm.fit1, lwd=3,col=2)
+abline(-1, 0.5, lwd=3,col=3)
+legend(-1, legend = c("Model Fit", "Pop Reg"), col=2:3, lwd=3)
+```
+<br/>
+
+*(i) Repeat (a)–(f) after modifying the data generation process in such a way that there is more noise in the data. The model (1) should remain the same. You can do this by increasing the variance of the normal distribution used to generate the error term ε in (b). Describe your results.*
+```{r}
+set.seed(3876)
+eps2 = rnorm(100,0,0.5)
+x2 = rnorm(100)
+y2 = -1 + 0.5*x2 + eps2
+plot(x2,y2)
+lm.fit2 = lm(y2~x2)
+summary(lm.fit2)
+
+abline(lm.fit2, lwd = 3, col = 2)
+abline(-1, 0.5, lwd = 3, col = 3)
+legend(-1, legend = c("Model Fit", "Pop reg"), col=2:3, lwd = 3)
+```
+On comparing the previous vales of R^2 and RSE, we can R^2 and RSE have increased by a considerable amount.
+<br/>
+*(j)What are the confidence intervals for β 0 and β 1 based on the original data set, the noisier data set, and the less noisy data set? Comment on your results.*
+```{r}
+confint(lm.fit)
+confint(lm.fit1)
+confint(lm.fit2)
+```
+Seems like all the confidence intervals are approximately around the 0.5 mark. fit1's interval is observed to be slightly narrow than fit's interval and fit2's interval is wider than fit's interval. <br/>
+<br/>
+
+## Question 2
+<br/>
+*In this problem, you will develop a model to predict whether a given car gets high or low gas mileage based on the Auto data set.*
+
+*(a) Create a binary variable, mpg01, that contains a 1 if mpg contains a value above its median, and a 0 if mpg contains a value below its median. You can compute the median using the median() function. Note you may find it helpful to use the data.frame() function to create a single data set containing both mpg01 and the other Auto variables.*
+```{r}
+library(ISLR)
+summary(Weekly)
+```
+```{r}
+data("Auto")
+mpg01 <- rep(0,length(Auto$mpg))
+mpg01[Auto$mpg > median(Auto$mpg)] <- 1
+Auto <- data.frame(Auto, mpg01)
+summary(Auto)
+```
+<br/>
+*(b) Explore the data graphically in order to investigate the association between mpg01 and the other features. Which of the other features seem most likely to be useful in predicting mpg01? Scatterplots and boxplots may be useful tools to answer this question. Describe your findings. *
+```{r}
+cor(Auto[,-9])
+```
+<br/>
+
+### Corrplot
+```{r}
+library(corrplot)
+corrplot::corrplot.mixed(cor(Auto[,-9]), upper="circle")
+```
+### Scatterplot Matrix
+```{r}
+pairs(Auto[, -9])
 ```
 
+### Boxplots
+```{r}
+par(mfrow=c(2,3))
+boxplot(displacement ~ mpg01, data = Auto, main = "Displacement vs. mpg01")
+boxplot(cylinders ~ mpg01, data = Auto, main = "Cylinders vs. mpg01")
+boxplot(weight ~ mpg01, data = Auto, main = "Weight vs. mpg01")
+boxplot(horsepower ~ mpg01, data = Auto, main = "Horsepower vs. mpg01")
+boxplot(acceleration ~ mpg01, data = Auto, main = "Acceleration vs. mpg01")
+boxplot(year ~ mpg01, data = Auto, main = "Year vs. mpg01")
+```
+There exists a clear anti-correlation between "mpg01" and cyclinders", "displacement", "horsepower" and "weight". <br/>
+<br/>
 
+*(c) Split the data into a training set and a test set.*
+```{r}
+set.seed(123)
+train <- sample(1:dim(Auto)[1], dim(Auto)[1]*.7, rep=FALSE)
+test <- train
+training_data = Auto[train, ]
+testing_data = Auto[test, ]
+mpg01.test <- mpg01[test]
+```
+<br/>
 
-
-
-
-
-
-
-
-
-
+*(f) Perform logistic regression on the training data in order to predict mpg01 using the variables that seemed most associated with mpg01 in (b). What is the test error of the model obtained?*
+```{r}
+glm.fit = glm(mpg01 ~ cylinders + weight + displacement + horsepower, data = Auto, 
+    family = binomial, subset = train)
+glm.probs = predict(glm.fit, testing_data, type = "response")
+glm.pred = rep(0, length(glm.probs))
+glm.pred[glm.probs > 0.5] = 1
+mean(glm.pred != mpg01.test)
+```
+The above logistic regression model has a 9.48% test error rate.
