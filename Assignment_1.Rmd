@@ -1,0 +1,69 @@
+---
+title: "Statistical Learning Assignment 1"
+author: "Tarun Sudhams"
+date: "22nd October 2018"
+output: html_notebook
+---
+
+## Question 1
+<br/>
+*(a) Using the rnorm() function, create a vector, x, containing 100 observations drawn from a N(0,1) distribution. This represents a feature, X.*
+```{r}
+set.seed(3876)
+x=rnorm(100, mean = 0, sd = 1)
+```
+<br/>
+*(b) Using the rnorm() function, create a vector, eps, containing 100 observations drawn from a N(0, 0.25) distribution i.e. a normal distribution with mean zero and variance 0.25.*
+
+```{r}
+eps = rnorm(100,mean=0,sd = 0.25)
+```
+<br/>
+*(c) Using x and eps, generate a vector y according to the model Y = −1+0.5X+ε.*
+```{r}
+y = -1+0.5*x + eps
+length(y)
+```
+The length of Y is 100 and value of β^o is -1 and β^1 is 0.5. <br/>
+<br/>
+*(d) Create a scatterplot displaying the relationship between x and y. Comment on what you observe.*
+```{r}
+plot(y~x)
+```
+The graph ploted above shows a linear relationship between Y and X. <br/>
+<br/>
+*(e) Fit a least squares linear model to predict y using x. Comment on the model obtained. How do β ˆ 0 and β ˆ 1 compare to β^o and β^1 ?*
+```{r}
+lm.fit = lm(y~x)
+summary(lm.fit)
+```
+<br/>
+*(f) Display the least squares line on the scatterplot obtained in (d). Draw the population regression line on the plot, in a different color. Use the legend() command to create an appropriate legend.*
+
+
+
+```{r}
+plot(y~x); abline(lm.fit, col = "red")
+legend("bottomright", c("Regression line"), lwd=1, col="red",bty ="n")
+```
+<br/>
+*(f) Now fit a polynomial regression model that predicts y using x and x 2 . Is there evidence that the quadratic term improves the model fit? Explain your answer.*
+
+```{r}
+plot(x,y)
+abline(lm.fit,lwd=3,col=2)
+abline(-1,0.5,lwd=3,col=3)
+legend(-1, legend = c("model fit", "pop.regression"), col=2:3,lwd=3)
+```
+
+
+
+
+
+
+
+
+
+
+
+
