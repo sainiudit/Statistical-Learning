@@ -208,4 +208,65 @@ The glm() estimates and bootstrap estimates of the standard errors are very simi
 
 *(a) Based on this data set, provide an estimate for the population mean of medv. Call this estimate μˆ.  *
 ```{r}
+library(MASS)
+summary(Boston)
+```
+```{r}
+set.seed(3876)
+attach(Boston)
+mu_hat <- mean(medv)
+mu_hat
+```
+*(b) Provide an estimate of the standard error of μˆ. Interpret this result. *
+```{r}
+x.hat <- sd(medv) / sqrt(dim(Boston)[1])
+x.hat
+```
+<br/>
 
+*(c) Now estimate the standard error of μˆ using the bootstrap. How does this compare to your answer from (b)? *
+```{r}
+boot.fn = function(data, index) return(mean(data[index]))
+library(boot)
+bstrap = boot(medv, boot.fn, 1000)
+bstrap
+```
+
+The bootsrap estimated standard error of μ̂of 0.40881 is very close to the estimate found in (b) of 0.4114. <br/>
+<br/>
+
+*(d) Based on your bootstrap estimate from (c), provide a 95 % confidence interval for the mean of medv. Compare it to the results obtained using t.test(Boston$medv).*
+```{r}
+t.test(medv)
+ConfidenceInterval.mu.hat <- c(22.53 - 2 * 0.4114, 22.53 + 2 * 0.4114)
+ConfidenceInterval.mu.hat
+```
+The confidence interval of bootstrap is very close to the one returned test function. <br/>
+
+*(e) Based on this dataset, provide an estimate, μˆ med , for the median value of medv in the population. *
+```{r}
+med_hat <- median(medv)
+med_hat
+```
+<br/>
+
+*(f) We now would like to estimate the standard error of μˆ med . Unfortunately, there is no simple formula for computing the standard error of the median. Instead, estimate the standard error of the median using the bootstrap. Comment on your findings. *
+```{r}
+boot.fn = function(data,index) return (median(data[index]))
+boot(medv, boot.fn, 1000)
+```
+The estimated median value of 21.2 is exactly the same as what was obtained in (e) with a standard error of 0.3927222 which is still quite small when compared to the value of the median.<br/>
+<br/>
+
+*(g) Based on this data set, provide an estimate for the tenth percentile of medv in Boston suburbs. Call this quantity μˆ 0.1 .*
+```{r}
+percentile_hat <- quantile(medv, c(0.1))
+percentile_hat
+```
+
+*(h) Use the bootstrap to estimate the standard error of μ̂ 0.1 Comment on your findings.*
+```{r}
+boot.fn = function(data, index) return(quantile(data[index], c(0.1)))
+boot(medv, boot.fn, 1000)
+```
+The estimated 10th percentile value of 12.75 is the same to the value obtained in (g) with a standard error of 0.5168 which is quite small when compared to the percentile value.
