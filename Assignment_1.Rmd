@@ -2,7 +2,9 @@
 title: "Statistical Learning Assignment 1"
 author: "Tarun Sudhams"
 date: "22nd October 2018"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 ## Question 1
@@ -54,6 +56,8 @@ legend(-1, legend = c("Model Fit", "Pop Reg"), col=2:3,lwd=3)
 lm.fit_sq = lm(y~x + I(x^2))
 summary(lm.fit_sq)
 ```
+The coefficient of X^2 is not significant as p-value is greater 0.05. So it's clearly that there is not enough evidence to show that the quadratic term imporves the model fit even if R^2 and RSE values are a little lower than the linear model. 
+
 <br/>
 *(h) Repeat (a)–(f) after modifying the data generation process in such a way that there is less noise in the data. The model (1) should remain the same. You can do this by decreasing the variance of the normal distribution used to generate the error term ε in (b). Describe your results.*
 ```{r}
@@ -69,6 +73,9 @@ abline(lm.fit1, lwd=3,col=2)
 abline(-1, 0.5, lwd=3,col=3)
 legend(-1, legend = c("Model Fit", "Pop Reg"), col=2:3, lwd=3)
 ```
+With the decrease in variance, the noise also decreased and now we have higher values of R^2 and the relationship is more linear. Furthermore, the RSE has also decreased. 
+
+
 <br/>
 
 *(i) Repeat (a)–(f) after modifying the data generation process in such a way that there is more noise in the data. The model (1) should remain the same. You can do this by increasing the variance of the normal distribution used to generate the error term ε in (b). Describe your results.*
@@ -222,6 +229,8 @@ mu_hat
 x.hat <- sd(medv) / sqrt(dim(Boston)[1])
 x.hat
 ```
+It tells us the average amount that this estimate μˆ differs from the actual value of μ. So μˆ differs by 0.488611 times by the actual value of μ.
+
 <br/>
 
 *(c) Now estimate the standard error of μˆ using the bootstrap. How does this compare to your answer from (b)? *
@@ -241,6 +250,7 @@ t.test(medv)
 ConfidenceInterval.mu.hat <- c(22.53 - 2 * 0.4114, 22.53 + 2 * 0.4114)
 ConfidenceInterval.mu.hat
 ```
+
 The confidence interval of bootstrap is very close to the one returned test function. <br/>
 
 *(e) Based on this dataset, provide an estimate, μˆ med , for the median value of medv in the population. *

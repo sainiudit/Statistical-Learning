@@ -1,0 +1,950 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Statistical Learning Assignment 1},
+            pdfauthor={Tarun Sudhams},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Statistical Learning Assignment 1}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Tarun Sudhams}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{22nd October 2018}
+
+
+\begin{document}
+\maketitle
+
+\subsection{Question 1}\label{question-1}
+
+\emph{In this exercise you will create some simulated data and will fit
+simple linear regression models to it. Make sure to use set.seed(Your
+UID) prior to starting part (a) to ensure consistent results.}
+
+\emph{(a) Using the rnorm() function, create a vector, x, containing 100
+observations drawn from a N(0,1) distribution. This represents a
+feature, X.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{3876}\NormalTok{)}
+\NormalTok{x=}\KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\DataTypeTok{mean =} \DecValTok{0}\NormalTok{, }\DataTypeTok{sd =} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+ \emph{(b) Using the rnorm() function, create a vector, eps, containing
+100 observations drawn from a N(0, 0.25) distribution i.e.~a normal
+distribution with mean zero and variance 0.25.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{eps =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{,}\DataTypeTok{mean=}\DecValTok{0}\NormalTok{,}\DataTypeTok{sd =} \FloatTok{0.25}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+ \emph{(c) Using x and eps, generate a vector y according to the model Y
+= -1+0.5X+ε.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y =}\StringTok{ }\OperatorTok{-}\DecValTok{1}\OperatorTok{+}\FloatTok{0.5}\OperatorTok{*}\NormalTok{x }\OperatorTok{+}\StringTok{ }\NormalTok{eps}
+\KeywordTok{length}\NormalTok{(y)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 100
+\end{verbatim}
+
+The length of Y is 100 and value of β\^{}o is -1 and β\^{}1 is 0.5.
+\emph{(d) Create a scatterplot displaying the relationship between x and
+y. Comment on what you observe.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(y}\OperatorTok{~}\NormalTok{x)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_1_files/figure-latex/unnamed-chunk-4-1.pdf}
+The graph ploted above shows a linear relationship between Y and X.
+\emph{(e) Fit a least squares linear model to predict y using x. Comment
+on the model obtained. How do βˆ0 and ?βˆ1 compare to β\^{}o and β\^{}1
+?}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm.fit =}\StringTok{ }\KeywordTok{lm}\NormalTok{(y}\OperatorTok{~}\NormalTok{x)}
+\KeywordTok{summary}\NormalTok{(lm.fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ x)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.72668 -0.15521 -0.01708  0.19065  0.55342 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -0.97065    0.02542  -38.18   <2e-16 ***
+## x            0.48541    0.02590   18.74   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.2528 on 98 degrees of freedom
+## Multiple R-squared:  0.7819, Adjusted R-squared:  0.7797 
+## F-statistic: 351.3 on 1 and 98 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+The linear regression fits very closely to the true value of the
+coefficients it was constructed from. The model has a large F-Statistic
+value and with a near zero p-value. \emph{(f) Display the least squares
+line on the scatterplot obtained in (d). Draw the population regression
+line on the plot, in a different color. Use the legend() command to
+create an appropriate legend.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(x,y)}
+\KeywordTok{abline}\NormalTok{(lm.fit,}\DataTypeTok{lwd=}\DecValTok{3}\NormalTok{,}\DataTypeTok{col=}\DecValTok{2}\NormalTok{)}
+\KeywordTok{abline}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{,}\FloatTok{0.5}\NormalTok{,}\DataTypeTok{lwd=}\DecValTok{3}\NormalTok{,}\DataTypeTok{col=}\DecValTok{3}\NormalTok{)}
+\KeywordTok{legend}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{, }\DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{"Model Fit"}\NormalTok{, }\StringTok{"Pop Reg"}\NormalTok{), }\DataTypeTok{col=}\DecValTok{2}\OperatorTok{:}\DecValTok{3}\NormalTok{,}\DataTypeTok{lwd=}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_1_files/figure-latex/unnamed-chunk-6-1.pdf}
+\emph{(g) Now fit a polynomial regression model that predicts y using x
+and x 2 . Is there evidence that the quadratic term improves the model
+fit? Explain your answer.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm.fit_sq =}\StringTok{ }\KeywordTok{lm}\NormalTok{(y}\OperatorTok{~}\NormalTok{x }\OperatorTok{+}\StringTok{ }\KeywordTok{I}\NormalTok{(x}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
+\KeywordTok{summary}\NormalTok{(lm.fit_sq)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ x + I(x^2))
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.72806 -0.15612 -0.01772  0.18870  0.55172 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -0.968547   0.031411 -30.835   <2e-16 ***
+## x            0.485291   0.026048  18.631   <2e-16 ***
+## I(x^2)      -0.002171   0.018842  -0.115    0.908    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.2541 on 97 degrees of freedom
+## Multiple R-squared:  0.7819, Adjusted R-squared:  0.7774 
+## F-statistic: 173.9 on 2 and 97 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+The coefficient of X\^{}2 is not significant as p-value is greater 0.05.
+So it's clearly that there is not enough evidence to show that the
+quadratic term imporves the model fit even if R\^{}2 and RSE values are
+a little lower than the linear model.
+
+ \emph{(h) Repeat (a)--(f) after modifying the data generation process
+in such a way that there is less noise in the data. The model (1) should
+remain the same. You can do this by decreasing the variance of the
+normal distribution used to generate the error term ε in (b). Describe
+your results.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{3876}\NormalTok{)}
+\NormalTok{eps1 =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\DecValTok{0}\NormalTok{, }\FloatTok{0.125}\NormalTok{)}
+\NormalTok{x1 =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{)}
+\NormalTok{y1 =}\StringTok{ }\OperatorTok{-}\DecValTok{1} \OperatorTok{+}\StringTok{ }\NormalTok{.}\DecValTok{5}\OperatorTok{*}\NormalTok{x1 }\OperatorTok{+}\StringTok{ }\NormalTok{eps1}
+\KeywordTok{plot}\NormalTok{(x1,y1)}
+\NormalTok{lm.fit1 =}\StringTok{ }\KeywordTok{lm}\NormalTok{(y1}\OperatorTok{~}\NormalTok{x1)}
+\KeywordTok{summary}\NormalTok{(lm.fit1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y1 ~ x1)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.34198 -0.06718  0.01616  0.07991  0.31600 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -0.98624    0.01238  -79.65   <2e-16 ***
+## x1           0.49308    0.01227   40.17   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.1231 on 98 degrees of freedom
+## Multiple R-squared:  0.9428, Adjusted R-squared:  0.9422 
+## F-statistic:  1614 on 1 and 98 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{abline}\NormalTok{(lm.fit1, }\DataTypeTok{lwd=}\DecValTok{3}\NormalTok{,}\DataTypeTok{col=}\DecValTok{2}\NormalTok{)}
+\KeywordTok{abline}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{3}\NormalTok{,}\DataTypeTok{col=}\DecValTok{3}\NormalTok{)}
+\KeywordTok{legend}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{, }\DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{"Model Fit"}\NormalTok{, }\StringTok{"Pop Reg"}\NormalTok{), }\DataTypeTok{col=}\DecValTok{2}\OperatorTok{:}\DecValTok{3}\NormalTok{, }\DataTypeTok{lwd=}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_1_files/figure-latex/unnamed-chunk-8-1.pdf}
+With the decrease in variance, the noise also decreased and now we have
+higher values of R\^{}2 and the relationship is more linear.
+Furthermore, the RSE has also decreased.
+
+\emph{(i) Repeat (a)--(f) after modifying the data generation process in
+such a way that there is more noise in the data. The model (1) should
+remain the same. You can do this by increasing the variance of the
+normal distribution used to generate the error term ε in (b). Describe
+your results.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{3876}\NormalTok{)}
+\NormalTok{eps2 =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.5}\NormalTok{)}
+\NormalTok{x2 =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{)}
+\NormalTok{y2 =}\StringTok{ }\OperatorTok{-}\DecValTok{1} \OperatorTok{+}\StringTok{ }\FloatTok{0.5}\OperatorTok{*}\NormalTok{x2 }\OperatorTok{+}\StringTok{ }\NormalTok{eps2}
+\KeywordTok{plot}\NormalTok{(x2,y2)}
+\NormalTok{lm.fit2 =}\StringTok{ }\KeywordTok{lm}\NormalTok{(y2}\OperatorTok{~}\NormalTok{x2)}
+\KeywordTok{summary}\NormalTok{(lm.fit2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y2 ~ x2)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.36790 -0.26871  0.06464  0.31962  1.26401 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -0.94496    0.04953 -19.078  < 2e-16 ***
+## x2           0.47234    0.04909   9.621 8.04e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.4923 on 98 degrees of freedom
+## Multiple R-squared:  0.4857, Adjusted R-squared:  0.4805 
+## F-statistic: 92.57 on 1 and 98 DF,  p-value: 8.043e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{abline}\NormalTok{(lm.fit2, }\DataTypeTok{lwd =} \DecValTok{3}\NormalTok{, }\DataTypeTok{col =} \DecValTok{2}\NormalTok{)}
+\KeywordTok{abline}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\DataTypeTok{lwd =} \DecValTok{3}\NormalTok{, }\DataTypeTok{col =} \DecValTok{3}\NormalTok{)}
+\KeywordTok{legend}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{, }\DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{"Model Fit"}\NormalTok{, }\StringTok{"Pop reg"}\NormalTok{), }\DataTypeTok{col=}\DecValTok{2}\OperatorTok{:}\DecValTok{3}\NormalTok{, }\DataTypeTok{lwd =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_1_files/figure-latex/unnamed-chunk-9-1.pdf}
+On comparing the previous vales of R\^{}2 and RSE, we can R\^{}2 and RSE
+have increased by a considerable amount. \emph{(j)What are the
+confidence intervals for β 0 and β 1 based on the original data set, the
+noisier data set, and the less noisy data set? Comment on your results.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{confint}\NormalTok{(lm.fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                  2.5 %     97.5 %
+## (Intercept) -1.0211076 -0.9201974
+## x            0.4340156  0.5367998
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{confint}\NormalTok{(lm.fit1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                 2.5 %     97.5 %
+## (Intercept) -1.010814 -0.9616677
+## x1           0.468728  0.5174405
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{confint}\NormalTok{(lm.fit2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                 2.5 %     97.5 %
+## (Intercept) -1.043256 -0.8466707
+## x2           0.374912  0.5697622
+\end{verbatim}
+
+Seems like all the confidence intervals are approximately around the 0.5
+mark. fit1's interval is observed to be slightly narrow than fit's
+interval and fit2's interval is wider than fit's interval.
+
+\subsection{Question 2}\label{question-2}
+
+ \emph{In this problem, you will develop a model to predict whether a
+given car gets high or low gas mileage based on the Auto data set.}
+
+\emph{(a) Create a binary variable, mpg01, that contains a 1 if mpg
+contains a value above its median, and a 0 if mpg contains a value below
+its median. You can compute the median using the median() function. Note
+you may find it helpful to use the data.frame() function to create a
+single data set containing both mpg01 and the other Auto variables.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ISLR)}
+\KeywordTok{summary}\NormalTok{(Weekly)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       Year           Lag1               Lag2               Lag3         
+##  Min.   :1990   Min.   :-18.1950   Min.   :-18.1950   Min.   :-18.1950  
+##  1st Qu.:1995   1st Qu.: -1.1540   1st Qu.: -1.1540   1st Qu.: -1.1580  
+##  Median :2000   Median :  0.2410   Median :  0.2410   Median :  0.2410  
+##  Mean   :2000   Mean   :  0.1506   Mean   :  0.1511   Mean   :  0.1472  
+##  3rd Qu.:2005   3rd Qu.:  1.4050   3rd Qu.:  1.4090   3rd Qu.:  1.4090  
+##  Max.   :2010   Max.   : 12.0260   Max.   : 12.0260   Max.   : 12.0260  
+##       Lag4               Lag5              Volume       
+##  Min.   :-18.1950   Min.   :-18.1950   Min.   :0.08747  
+##  1st Qu.: -1.1580   1st Qu.: -1.1660   1st Qu.:0.33202  
+##  Median :  0.2380   Median :  0.2340   Median :1.00268  
+##  Mean   :  0.1458   Mean   :  0.1399   Mean   :1.57462  
+##  3rd Qu.:  1.4090   3rd Qu.:  1.4050   3rd Qu.:2.05373  
+##  Max.   : 12.0260   Max.   : 12.0260   Max.   :9.32821  
+##      Today          Direction 
+##  Min.   :-18.1950   Down:484  
+##  1st Qu.: -1.1540   Up  :605  
+##  Median :  0.2410             
+##  Mean   :  0.1499             
+##  3rd Qu.:  1.4050             
+##  Max.   : 12.0260
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{data}\NormalTok{(}\StringTok{"Auto"}\NormalTok{)}
+\NormalTok{mpg01 <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\KeywordTok{length}\NormalTok{(Auto}\OperatorTok{$}\NormalTok{mpg))}
+\NormalTok{mpg01[Auto}\OperatorTok{$}\NormalTok{mpg }\OperatorTok{>}\StringTok{ }\KeywordTok{median}\NormalTok{(Auto}\OperatorTok{$}\NormalTok{mpg)] <-}\StringTok{ }\DecValTok{1}
+\NormalTok{Auto <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(Auto, mpg01)}
+\KeywordTok{summary}\NormalTok{(Auto)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       mpg          cylinders      displacement     horsepower   
+##  Min.   : 9.00   Min.   :3.000   Min.   : 68.0   Min.   : 46.0  
+##  1st Qu.:17.00   1st Qu.:4.000   1st Qu.:105.0   1st Qu.: 75.0  
+##  Median :22.75   Median :4.000   Median :151.0   Median : 93.5  
+##  Mean   :23.45   Mean   :5.472   Mean   :194.4   Mean   :104.5  
+##  3rd Qu.:29.00   3rd Qu.:8.000   3rd Qu.:275.8   3rd Qu.:126.0  
+##  Max.   :46.60   Max.   :8.000   Max.   :455.0   Max.   :230.0  
+##                                                                 
+##      weight      acceleration        year           origin     
+##  Min.   :1613   Min.   : 8.00   Min.   :70.00   Min.   :1.000  
+##  1st Qu.:2225   1st Qu.:13.78   1st Qu.:73.00   1st Qu.:1.000  
+##  Median :2804   Median :15.50   Median :76.00   Median :1.000  
+##  Mean   :2978   Mean   :15.54   Mean   :75.98   Mean   :1.577  
+##  3rd Qu.:3615   3rd Qu.:17.02   3rd Qu.:79.00   3rd Qu.:2.000  
+##  Max.   :5140   Max.   :24.80   Max.   :82.00   Max.   :3.000  
+##                                                                
+##                  name         mpg01    
+##  amc matador       :  5   Min.   :0.0  
+##  ford pinto        :  5   1st Qu.:0.0  
+##  toyota corolla    :  5   Median :0.5  
+##  amc gremlin       :  4   Mean   :0.5  
+##  amc hornet        :  4   3rd Qu.:1.0  
+##  chevrolet chevette:  4   Max.   :1.0  
+##  (Other)           :365
+\end{verbatim}
+
+ \emph{(b) Explore the data graphically in order to investigate the
+association between mpg01 and the other features. Which of the other
+features seem most likely to be useful in predicting mpg01? Scatterplots
+and boxplots may be useful tools to answer this question. Describe your
+findings. }
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cor}\NormalTok{(Auto[,}\OperatorTok{-}\DecValTok{9}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                     mpg  cylinders displacement horsepower     weight
+## mpg           1.0000000 -0.7776175   -0.8051269 -0.7784268 -0.8322442
+## cylinders    -0.7776175  1.0000000    0.9508233  0.8429834  0.8975273
+## displacement -0.8051269  0.9508233    1.0000000  0.8972570  0.9329944
+## horsepower   -0.7784268  0.8429834    0.8972570  1.0000000  0.8645377
+## weight       -0.8322442  0.8975273    0.9329944  0.8645377  1.0000000
+## acceleration  0.4233285 -0.5046834   -0.5438005 -0.6891955 -0.4168392
+## year          0.5805410 -0.3456474   -0.3698552 -0.4163615 -0.3091199
+## origin        0.5652088 -0.5689316   -0.6145351 -0.4551715 -0.5850054
+## mpg01         0.8369392 -0.7591939   -0.7534766 -0.6670526 -0.7577566
+##              acceleration       year     origin      mpg01
+## mpg             0.4233285  0.5805410  0.5652088  0.8369392
+## cylinders      -0.5046834 -0.3456474 -0.5689316 -0.7591939
+## displacement   -0.5438005 -0.3698552 -0.6145351 -0.7534766
+## horsepower     -0.6891955 -0.4163615 -0.4551715 -0.6670526
+## weight         -0.4168392 -0.3091199 -0.5850054 -0.7577566
+## acceleration    1.0000000  0.2903161  0.2127458  0.3468215
+## year            0.2903161  1.0000000  0.1815277  0.4299042
+## origin          0.2127458  0.1815277  1.0000000  0.5136984
+## mpg01           0.3468215  0.4299042  0.5136984  1.0000000
+\end{verbatim}
+
+\subsubsection{Corrplot}\label{corrplot}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(corrplot)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## corrplot 0.84 loaded
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corrplot}\OperatorTok{::}\KeywordTok{corrplot.mixed}\NormalTok{(}\KeywordTok{cor}\NormalTok{(Auto[,}\OperatorTok{-}\DecValTok{9}\NormalTok{]), }\DataTypeTok{upper=}\StringTok{"circle"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_1_files/figure-latex/unnamed-chunk-14-1.pdf}
+\#\#\# Scatterplot Matrix
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pairs}\NormalTok{(Auto[, }\OperatorTok{-}\DecValTok{9}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_1_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+\subsubsection{Boxplots}\label{boxplots}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{))}
+\KeywordTok{boxplot}\NormalTok{(displacement }\OperatorTok{~}\StringTok{ }\NormalTok{mpg01, }\DataTypeTok{data =}\NormalTok{ Auto, }\DataTypeTok{main =} \StringTok{"Displacement vs. mpg01"}\NormalTok{)}
+\KeywordTok{boxplot}\NormalTok{(cylinders }\OperatorTok{~}\StringTok{ }\NormalTok{mpg01, }\DataTypeTok{data =}\NormalTok{ Auto, }\DataTypeTok{main =} \StringTok{"Cylinders vs. mpg01"}\NormalTok{)}
+\KeywordTok{boxplot}\NormalTok{(weight }\OperatorTok{~}\StringTok{ }\NormalTok{mpg01, }\DataTypeTok{data =}\NormalTok{ Auto, }\DataTypeTok{main =} \StringTok{"Weight vs. mpg01"}\NormalTok{)}
+\KeywordTok{boxplot}\NormalTok{(horsepower }\OperatorTok{~}\StringTok{ }\NormalTok{mpg01, }\DataTypeTok{data =}\NormalTok{ Auto, }\DataTypeTok{main =} \StringTok{"Horsepower vs. mpg01"}\NormalTok{)}
+\KeywordTok{boxplot}\NormalTok{(acceleration }\OperatorTok{~}\StringTok{ }\NormalTok{mpg01, }\DataTypeTok{data =}\NormalTok{ Auto, }\DataTypeTok{main =} \StringTok{"Acceleration vs. mpg01"}\NormalTok{)}
+\KeywordTok{boxplot}\NormalTok{(year }\OperatorTok{~}\StringTok{ }\NormalTok{mpg01, }\DataTypeTok{data =}\NormalTok{ Auto, }\DataTypeTok{main =} \StringTok{"Year vs. mpg01"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Assignment_1_files/figure-latex/unnamed-chunk-16-1.pdf}
+There exists a clear anti-correlation between ``mpg01'' and
+cyclinders``,''displacement``,''horsepower" and ``weight''.
+
+\emph{(c) Split the data into a training set and a test set.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{train <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{dim}\NormalTok{(Auto)[}\DecValTok{1}\NormalTok{], }\KeywordTok{dim}\NormalTok{(Auto)[}\DecValTok{1}\NormalTok{]}\OperatorTok{*}\NormalTok{.}\DecValTok{7}\NormalTok{, }\DataTypeTok{rep=}\OtherTok{FALSE}\NormalTok{)}
+\NormalTok{test <-}\StringTok{ }\NormalTok{train}
+\NormalTok{training_data =}\StringTok{ }\NormalTok{Auto[train, ]}
+\NormalTok{testing_data =}\StringTok{ }\NormalTok{Auto[test, ]}
+\NormalTok{mpg01.test <-}\StringTok{ }\NormalTok{mpg01[test]}
+\end{Highlighting}
+\end{Shaded}
+
+\emph{(f) Perform logistic regression on the training data in order to
+predict mpg01 using the variables that seemed most associated with mpg01
+in (b). What is the test error of the model obtained?}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{glm.fit =}\StringTok{ }\KeywordTok{glm}\NormalTok{(mpg01 }\OperatorTok{~}\StringTok{ }\NormalTok{cylinders }\OperatorTok{+}\StringTok{ }\NormalTok{weight }\OperatorTok{+}\StringTok{ }\NormalTok{displacement }\OperatorTok{+}\StringTok{ }\NormalTok{horsepower, }\DataTypeTok{data =}\NormalTok{ Auto, }
+    \DataTypeTok{family =}\NormalTok{ binomial, }\DataTypeTok{subset =}\NormalTok{ train)}
+\NormalTok{glm.probs =}\StringTok{ }\KeywordTok{predict}\NormalTok{(glm.fit, testing_data, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+\NormalTok{glm.pred =}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\KeywordTok{length}\NormalTok{(glm.probs))}
+\NormalTok{glm.pred[glm.probs }\OperatorTok{>}\StringTok{ }\FloatTok{0.5}\NormalTok{] =}\StringTok{ }\DecValTok{1}
+\KeywordTok{mean}\NormalTok{(glm.pred }\OperatorTok{!=}\StringTok{ }\NormalTok{mpg01.test)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.09489051
+\end{verbatim}
+
+The above logistic regression model has a 9.48\% test error rate.
+
+\subsection{Question 3}\label{question-3}
+
+ \emph{We continue to consider the use of a logistic regression model to
+predict the probability of default using income and balance on the
+Default data set. In particular, we will now compute estimates for the
+standard errors of the income and balance logistic regression
+coefficients in two different ways: (1) using the bootstrap, and (2)
+using the standard formula for computing the standard errors in the
+glm() function. Do not forget to set a random seed before beginning your
+analysis.}
+
+\emph{(a) Using the summary() and glm() functions, determine the
+estimated standard errors for the coefficients associated with income
+and balance in a multiple logistic regression model that uses both
+predictors.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{3876}\NormalTok{)}
+\KeywordTok{attach}\NormalTok{(Default)}
+\NormalTok{glm.fit =}\StringTok{ }\KeywordTok{glm}\NormalTok{(default }\OperatorTok{~}\StringTok{ }\NormalTok{income }\OperatorTok{+}\StringTok{ }\NormalTok{balance, }\DataTypeTok{data =}\NormalTok{ Default, }\DataTypeTok{family =}\NormalTok{ binomial)}
+\KeywordTok{summary}\NormalTok{(glm.fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = default ~ income + balance, family = binomial, 
+##     data = Default)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.4725  -0.1444  -0.0574  -0.0211   3.7245  
+## 
+## Coefficients:
+##               Estimate Std. Error z value Pr(>|z|)    
+## (Intercept) -1.154e+01  4.348e-01 -26.545  < 2e-16 ***
+## income       2.081e-05  4.985e-06   4.174 2.99e-05 ***
+## balance      5.647e-03  2.274e-04  24.836  < 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 2920.6  on 9999  degrees of freedom
+## Residual deviance: 1579.0  on 9997  degrees of freedom
+## AIC: 1585
+## 
+## Number of Fisher Scoring iterations: 8
+\end{verbatim}
+
+The glm() estimates of standard errors for the coefficients β0, β1 and
+β2 are 0.434756, 4.9841572 x 10\^{}\{-6\} and 2.2737314 x 10\^{}\{-4\}
+
+\emph{(b) Write a function, boot.fn(), that takes as input the Default
+data set as well as an index of the observations, and that outputs the
+coefficient estimates for income and balance in the multiple logistic
+regression model.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{boot.fn <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(data,index)}
+\NormalTok{\{}
+\NormalTok{  fit <-}\KeywordTok{glm}\NormalTok{(default }\OperatorTok{~}\StringTok{ }\NormalTok{income }\OperatorTok{+}\StringTok{ }\NormalTok{balance, }\DataTypeTok{data =}\NormalTok{ data, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{, }\DataTypeTok{subset =}\NormalTok{ index)}
+  \KeywordTok{return}\NormalTok{ (}\KeywordTok{coef}\NormalTok{(fit))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\emph{(c) Write a function, boot.fn(), that takes as input the Default
+data set as well as an index of the observations, and that outputs the
+coefficient estimates for income and balance in the multiple logistic
+regression model.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(boot)}
+\KeywordTok{boot}\NormalTok{(Default, boot.fn, }\DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## ORDINARY NONPARAMETRIC BOOTSTRAP
+## 
+## 
+## Call:
+## boot(data = Default, statistic = boot.fn, R = 1000)
+## 
+## 
+## Bootstrap Statistics :
+##          original        bias     std. error
+## t1* -1.154047e+01 -1.451662e-02 4.281430e-01
+## t2*  2.080898e-05  2.160095e-08 4.690553e-06
+## t3*  5.647103e-03  7.653440e-06 2.288706e-04
+\end{verbatim}
+
+The bootstrap estimates of the standard errors for the coefficients
+β0,β1 and β2 are 0.4239, 4.583 x 10\^{}(-6) and 2.268 x 10\^{}(-4)
+
+\emph{(d) Comment on the estimated standard errors obtained using the
+glm() function and using your bootstrap function. }
+
+The glm() estimates and bootstrap estimates of the standard errors are
+very similar to each other.
+
+\subsection{Question 4}\label{question-4}
+
+ \emph{We will now consider the Boston housing data set, from the MASS
+library.}
+
+\emph{(a) Based on this data set, provide an estimate for the population
+mean of medv. Call this estimate μˆ. }
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(MASS)}
+\KeywordTok{summary}\NormalTok{(Boston)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       crim                zn             indus            chas        
+##  Min.   : 0.00632   Min.   :  0.00   Min.   : 0.46   Min.   :0.00000  
+##  1st Qu.: 0.08204   1st Qu.:  0.00   1st Qu.: 5.19   1st Qu.:0.00000  
+##  Median : 0.25651   Median :  0.00   Median : 9.69   Median :0.00000  
+##  Mean   : 3.61352   Mean   : 11.36   Mean   :11.14   Mean   :0.06917  
+##  3rd Qu.: 3.67708   3rd Qu.: 12.50   3rd Qu.:18.10   3rd Qu.:0.00000  
+##  Max.   :88.97620   Max.   :100.00   Max.   :27.74   Max.   :1.00000  
+##       nox               rm             age              dis        
+##  Min.   :0.3850   Min.   :3.561   Min.   :  2.90   Min.   : 1.130  
+##  1st Qu.:0.4490   1st Qu.:5.886   1st Qu.: 45.02   1st Qu.: 2.100  
+##  Median :0.5380   Median :6.208   Median : 77.50   Median : 3.207  
+##  Mean   :0.5547   Mean   :6.285   Mean   : 68.57   Mean   : 3.795  
+##  3rd Qu.:0.6240   3rd Qu.:6.623   3rd Qu.: 94.08   3rd Qu.: 5.188  
+##  Max.   :0.8710   Max.   :8.780   Max.   :100.00   Max.   :12.127  
+##       rad              tax           ptratio          black       
+##  Min.   : 1.000   Min.   :187.0   Min.   :12.60   Min.   :  0.32  
+##  1st Qu.: 4.000   1st Qu.:279.0   1st Qu.:17.40   1st Qu.:375.38  
+##  Median : 5.000   Median :330.0   Median :19.05   Median :391.44  
+##  Mean   : 9.549   Mean   :408.2   Mean   :18.46   Mean   :356.67  
+##  3rd Qu.:24.000   3rd Qu.:666.0   3rd Qu.:20.20   3rd Qu.:396.23  
+##  Max.   :24.000   Max.   :711.0   Max.   :22.00   Max.   :396.90  
+##      lstat            medv      
+##  Min.   : 1.73   Min.   : 5.00  
+##  1st Qu.: 6.95   1st Qu.:17.02  
+##  Median :11.36   Median :21.20  
+##  Mean   :12.65   Mean   :22.53  
+##  3rd Qu.:16.95   3rd Qu.:25.00  
+##  Max.   :37.97   Max.   :50.00
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{3876}\NormalTok{)}
+\KeywordTok{attach}\NormalTok{(Boston)}
+\NormalTok{mu_hat <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(medv)}
+\NormalTok{mu_hat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 22.53281
+\end{verbatim}
+
+\emph{(b) Provide an estimate of the standard error of μˆ. Interpret
+this result. }
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x.hat <-}\StringTok{ }\KeywordTok{sd}\NormalTok{(medv) }\OperatorTok{/}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{dim}\NormalTok{(Boston)[}\DecValTok{1}\NormalTok{])}
+\NormalTok{x.hat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.4088611
+\end{verbatim}
+
+It tells us the average amount that this estimate μˆ differs from the
+actual value of μ. So μˆ differs by 0.488611 times by the actual value
+of μ.
+
+\emph{(c) Now estimate the standard error of μˆ using the bootstrap. How
+does this compare to your answer from (b)? }
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{boot.fn =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(data, index) }\KeywordTok{return}\NormalTok{(}\KeywordTok{mean}\NormalTok{(data[index]))}
+\KeywordTok{library}\NormalTok{(boot)}
+\NormalTok{bstrap =}\StringTok{ }\KeywordTok{boot}\NormalTok{(medv, boot.fn, }\DecValTok{1000}\NormalTok{)}
+\NormalTok{bstrap}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## ORDINARY NONPARAMETRIC BOOTSTRAP
+## 
+## 
+## Call:
+## boot(data = medv, statistic = boot.fn, R = 1000)
+## 
+## 
+## Bootstrap Statistics :
+##     original      bias    std. error
+## t1* 22.53281 0.007578063   0.4114338
+\end{verbatim}
+
+The bootsrap estimated standard error of μ̂of 0.40881 is very close to
+the estimate found in (b) of 0.4114.
+
+\emph{(d) Based on your bootstrap estimate from (c), provide a 95 \%
+confidence interval for the mean of medv. Compare it to the results
+obtained using t.test(Boston\$medv).}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{t.test}\NormalTok{(medv)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  One Sample t-test
+## 
+## data:  medv
+## t = 55.111, df = 505, p-value < 2.2e-16
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  21.72953 23.33608
+## sample estimates:
+## mean of x 
+##  22.53281
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ConfidenceInterval.mu.hat <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{22.53} \OperatorTok{-}\StringTok{ }\DecValTok{2} \OperatorTok{*}\StringTok{ }\FloatTok{0.4114}\NormalTok{, }\FloatTok{22.53} \OperatorTok{+}\StringTok{ }\DecValTok{2} \OperatorTok{*}\StringTok{ }\FloatTok{0.4114}\NormalTok{)}
+\NormalTok{ConfidenceInterval.mu.hat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 21.7072 23.3528
+\end{verbatim}
+
+The confidence interval of bootstrap is very close to the one returned
+test function.
+
+\emph{(e) Based on this dataset, provide an estimate, μˆ med , for the
+median value of medv in the population. }
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{med_hat <-}\StringTok{ }\KeywordTok{median}\NormalTok{(medv)}
+\NormalTok{med_hat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 21.2
+\end{verbatim}
+
+\emph{(f) We now would like to estimate the standard error of μˆ med .
+Unfortunately, there is no simple formula for computing the standard
+error of the median. Instead, estimate the standard error of the median
+using the bootstrap. Comment on your findings. }
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{boot.fn =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(data,index) }\KeywordTok{return}\NormalTok{ (}\KeywordTok{median}\NormalTok{(data[index]))}
+\KeywordTok{boot}\NormalTok{(medv, boot.fn, }\DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## ORDINARY NONPARAMETRIC BOOTSTRAP
+## 
+## 
+## Call:
+## boot(data = medv, statistic = boot.fn, R = 1000)
+## 
+## 
+## Bootstrap Statistics :
+##     original  bias    std. error
+## t1*     21.2 0.01195   0.3808145
+\end{verbatim}
+
+The estimated median value of 21.2 is exactly the same as what was
+obtained in (e) with a standard error of 0.3927222 which is still quite
+small when compared to the value of the median.
+
+\emph{(g) Based on this data set, provide an estimate for the tenth
+percentile of medv in Boston suburbs. Call this quantity μˆ 0.1 .}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{percentile_hat <-}\StringTok{ }\KeywordTok{quantile}\NormalTok{(medv, }\KeywordTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{))}
+\NormalTok{percentile_hat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   10% 
+## 12.75
+\end{verbatim}
+
+\emph{(h) Use the bootstrap to estimate the standard error of μ̂ 0.1
+Comment on your findings.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{boot.fn =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(data, index) }\KeywordTok{return}\NormalTok{(}\KeywordTok{quantile}\NormalTok{(data[index], }\KeywordTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{)))}
+\KeywordTok{boot}\NormalTok{(medv, boot.fn, }\DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## ORDINARY NONPARAMETRIC BOOTSTRAP
+## 
+## 
+## Call:
+## boot(data = medv, statistic = boot.fn, R = 1000)
+## 
+## 
+## Bootstrap Statistics :
+##     original  bias    std. error
+## t1*    12.75 -0.0113   0.5168844
+\end{verbatim}
+
+The estimated 10th percentile value of 12.75 is the same to the value
+obtained in (g) with a standard error of 0.5168 which is quite small
+when compared to the percentile value.
+
+
+\end{document}
