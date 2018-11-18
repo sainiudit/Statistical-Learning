@@ -54,8 +54,8 @@ points(which.max(reg.summary$adjr),reg.summary$adjr[which.max(reg.summary$adjr)]
 coef(regfit.full,which.max(reg.summary$adjr))
 ```
 
-Therefore, the above three plots show that the best subset method gives us a model with 4 predictor variables when C_P, BIC and Adjusted R Square are used as the judgement criteria to select the models*
-*The model so obtained selects x, X^2, X^3 and X^10 as the parameters and hence the original relationship of Y is detailed by x, x^2, x^3 and x^10 <br>
+Therefore, the above three plots show that the best subset method gives us a model with 3 predictor variables when C_P, BIC and Adjusted R Square are used as the judgement criteria to select the models*
+*The model so obtained selects x, X^2, X^5 as the parameters and hence the original relationship of Y is detailed by x, x^2 and x^5 <br>
 <br>
 *(d) Repeat (c), using forward stepwise selection and also using backwards stepwise selection. How does your answer compare to the results in (c)?.*
 <br>
@@ -84,10 +84,204 @@ points(which.max(reg.summary.fwd$adjr),reg.summary.fwd$adjr[which.max(reg.summar
 ```{r}
 coef(regfit.fwd,which.max(reg.summary.fwd$adjr))
 ```
+Even with Forward Selection Approach, the model picks x, x^2 and x^5 as predictors
 <br>
 
 Now, let's consider the Backward Selection Approach
 
+```{r}
+library(leaps)
+data.full<-data.frame(y=y,x=x)
+regfit.bwd<-regsubsets(y~x+I(x^2) + I(x^3) + I(x^4) + I(x^5) + I(x^6) + I(x^7) + I(x^8) + I(x^9) + I(x^10), data = data.full, nvmax = 10,really.big = T,method = "backward")
+reg.summary.bwd<-summary(regfit.bwd)
+par(mfrow=c(1,3))
 
+#Plotting Model with C_P value 
+plot(reg.summary.bwd$cp,xlab="Number of Variables",ylab="C_p",type="l")
+points(which.min(reg.summary.bwd$cp),reg.summary.bwd$cp[which.min(reg.summary.bwd$cp)],col="blue",cex=2,pch=20)
 
+#Plotting Model with BIC Value
+plot(reg.summary.bwd$bic,xlab="Number of Variables",ylab="BIC",type="l")
+points(which.min(reg.summary.bwd$bic),reg.summary.bwd$bic[which.min(reg.summary.bwd$bic)],col="blue",cex=2,pch=20)
+
+#Plotting Model with adjusted R^2 Value
+plot(reg.summary.bwd$adjr2,xlab="Number of Variables",ylab="Adj R^2",type="l")
+points(which.max(reg.summary.bwd$adjr2),reg.summary.bwd$adjr2[which.max(reg.summary.bwd$adjr2)],col="blue",cex=2,pch=20)
+```
+<br> 
+
+The coefficients of the model while using this approach would be: 
+<br>
+```{r}
+coef(regfit.bwd,which.max(reg.summary.bwd$adjr2))
+```
+<br>
+
+Even with the Backward Selection Approach, our model picks x, x^2 and x^5 as the predictors.
+
+<br>
 *(e) Now ﬁt a lasso model to the simulated data, again using X, X 2 , . . . , X 10 as predictors. Use cross-validation to select the optimal value of λ. Create plots of the cross-validation error as a function of λ. Report the resulting coeﬃcient estimates, and discuss the results obtained. *
+
+```{r}
+library(glmnet)
+set.seed(1)
+xmat<-model.matrix(y ~ x + I(x^2) + I(x^3) + I(x^4) + I(x^5) + I(x^6) + I(x^7) + I(x^8) + I(x^9) + I(x^10), data = data.full)[,-1]
+set.seed(1)
+cv.lasso<-cv.glmnet(xmat,y,alpha=1)
+plot(cv.lasso)
+```
+
+```{r}
+lamda_value<-cv.lasso$lambda.min
+lamda_value
+fit.lasso<-glmnet(xmat,y,alpha=1)
+predict(fit.lasso,s=lamda_value,type="coefficients")[1:11,]
+```
+Upon performing crossvalidation, we find that the Mean Squared Error(MSE) turned out to be 0.01643. We will use this value to fit lasso regression.
+
+*(f) Now generate a response vector Y according to the model Y=β0+β7X7+error and perform best subset selection and the lasso. Discuss the results obtained.*
+```{r}
+b7<-7
+y <- b0 + b7 * x^7 + error
+data.full <- data.frame(y = y, x = x)
+regfit.full <- regsubsets(y ~ x + I(x^2) + I(x^3) + I(x^4) + I(x^5) + I(x^6) + I(x^7) + I(x^8) + I(x^9) + I(x^10), data = data.full, nvmax = 10)
+reg.summary <- summary(regfit.full)
+par(mfrow = c(1, 3))
+plot(reg.summary$cp, xlab = "Number of variables", ylab = "C_p", type = "l")
+points(which.min(reg.summary$cp), reg.summary$cp[which.min(reg.summary$cp)], col = "red", cex = 2, pch = 20)
+plot(reg.summary$bic, xlab = "Number of variables", ylab = "BIC", type = "l")
+points(which.min(reg.summary$bic), reg.summary$bic[which.min(reg.summary$bic)], col = "red", cex = 2, pch = 20)
+plot(reg.summary$adjr2, xlab = "Number of variables", ylab = "Adjusted R^2", type = "l")
+points(which.max(reg.summary$adjr2), reg.summary$adjr2[which.max(reg.summary$adjr2)], col = "red", cex = 2, pch = 20)
+```
+
+Finding the coefficients for the Best Subset Method
+
+```{r}
+coef(regfit.full,2)
+```
+
+```{r}
+coef(regfit.full,1)
+```
+```{r}
+coef(regfit.full,4)
+```
+<br>
+
+Comparing the values given by Best Subset Method, we can see that Cp chooses a two variable model, while BIC chooses a one variable model and adjusted R square chooses a 4 variables model.
+
+Let's build a Lasso Model now.
+
+```{r}
+xmat <- model.matrix(y ~ x + I(x^2) + I(x^3) + I(x^4) + I(x^5) + I(x^6) + I(x^7) + I(x^8) + I(x^9) + I(x^10), data = data.full)[, -1]
+set.seed(1)
+cv.lasso <- cv.glmnet(xmat, y, alpha = 1)
+lambda_value <- cv.lasso$lambda.min
+lambda_value
+```
+
+Fitting the Lasso Model
+
+```{r}
+fit.lasso <- glmnet(xmat, y, alpha = 1)
+predict(fit.lasso, s = lambda_value, type = "coefficients")[1:11, ]
+```
+
+The Lasso Model chooses the best model with one variable. Thus Lasso peforms better than Best Subset Method and gives us a value closer to the simulated value of Y. <br>
+<br>
+
+# Question 2(Chapter 8, Exercise 8 (Page 333))
+
+*In the lab, a classiﬁcation tree was applied to the Carseats data set af- ter converting Sales into a qualitative response variable. Now we will seek to predict Sales using regression trees and related approaches, treating the response as a quantitative variable.*
+
+*(a) Split the data set into a training set and a test set.*
+```{r}
+library(ISLR)
+attach(Carseats)
+set.seed(1)
+subset<-sample(nrow(Carseats),nrow(Carseats)*0.7)
+car.train<-Carseats[subset,]
+car.test<-Carseats[-subset,]
+```
+
+*(b) Fit a regression tree to the training set. Plot the tree, and inter- pret the results. What test MSE do you obtain?*
+
+```{r}
+library(tree)
+car.model.train<-tree(Sales~.,car.train)
+summary(car.model.train)
+```
+
+```{r}
+plot(car.model.train)
+text(car.model.train,pretty=0)
+```
+
+```{r}
+tree.prediction<-predict(car.model.train,newdata=car.test)
+tree.mse<-mean((car.test$Sales-tree.prediction)^2)
+tree.mse
+```
+
+The Mean Squared Error of a fully grown tree is 5.288
+
+*(c) Use cross-validation in order to determine the optimal level of tree complexity. Does pruning the tree improve the test MSE?*
+
+```{r}
+set.seed(1)
+cv.car<-cv.tree(car.model.train)
+plot(cv.car$size,cv.car$dev,xlab = "Size of Tree",ylab = "Deviance",type = "b")
+```
+
+```{r}
+prune.car<-prune.tree(car.model.train,best=6)
+plot(prune.car)
+text(prune.car,pretty=0)
+```
+
+```{r}
+prune.predict<-predict(prune.car,car.test)
+mean((prune.predict-car.test$Sales)^2)
+```
+
+I have used cross validation to find the size to which the tree should be pruned.The size for which the deviance is minimum is selected as the optimal size for pruning
+
+For the pruned tree, I get MSE as 5.454
+
+*(d) Use the bagging approach in order to analyze this data. What test MSE do you obtain? Use the importance() function to determine which variables are most important.*
+
+```{r}
+library(randomForest)
+bag.car<-randomForest(Sales~.,car.train,importance=TRUE,mtry=13)
+importance(bag.car)
+```
+
+```{r}
+bag.car.predict<-predict(bag.car,car.test)
+mean((bag.car.predict-car.test$Sales)^2)
+```
+
+Now we can us randomForest with m=p=13 total number of predictors which is equivalent to bagging. The Test Set MSE obtained is 2.351. It has further reduced compared to single pruned tree.Thus Bagging helped reducing the MSE
+
+We can see that Price & ShelvLoc are the two most important variables chosen by Bagging model. <br>
+<br>
+
+*(e) Use random forests to analyze this data. What test MSE do you obtain? Use the importance() function to determine which variables aremost important. Describe the effect of m, the number of variables considered at each split, on the error rate obtained. *
+
+```{r}
+rf.car<-randomForest(Sales~.,car.train,importance=TRUE,mtry=sqrt(13))
+importance(rf.car)
+```
+
+```{r}
+rf.car.predict<-predict(rf.car,car.test)
+mean((rf.car.predict-car.test$Sales)^2)
+```
+<br>
+Using Random Forest the MSE increased compared to bagging. The important variables chosen by Random Forest are the same as the one chosen by Bagging. Random Forest avoids correlated trees and hence is expected to perform better than Bagging. Here the case is not true.Further tuning of Random Forest model should be tried
+
+Full Grown Tree MSE: 5.288
+Pruned Tree MSE: 5.454
+Bagging Model MSE: 2.324
+Random Forest MSE: 2.518
