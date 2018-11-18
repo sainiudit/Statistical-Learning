@@ -12,7 +12,7 @@ output: html_document
 *(a) Use the rnorm() function to generate a predictor X of length n = 100, as well as a noise vector eps of length n = 100.*
 
 ```{r}
-set.seed(3876)
+set.seed(1)
 x<-rnorm(100)
 error<-rnorm(100)
 ```
@@ -82,4 +82,12 @@ points(which.max(reg.summary.fwd$adjr),reg.summary.fwd$adjr[which.max(reg.summar
 ```
 <br>
 ```{r}
-coef(regfit.fwd)
+coef(regfit.fwd,which.max(reg.summary.fwd$adjr))
+```
+<br>
+
+Now, let's consider the Backward Selection Approach
+
+
+
+*(e) Now ﬁt a lasso model to the simulated data, again using X, X 2 , . . . , X 10 as predictors. Use cross-validation to select the optimal value of λ. Create plots of the cross-validation error as a function of λ. Report the resulting coeﬃcient estimates, and discuss the results obtained. *
