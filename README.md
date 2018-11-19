@@ -5,7 +5,7 @@ Repository of R Markdown and HTML files for the course *Introduction to Statisti
 ## Tech Stack Used
 
 RStudio
-Gitkraken
+Visual Studio Code
 
 ## Reference Book 
 
