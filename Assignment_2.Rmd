@@ -282,6 +282,7 @@ mean((rf.car.predict-car.test$Sales)^2)
 Using Random Forest the MSE increased compared to bagging. The important variables chosen by Random Forest are the same as the one chosen by Bagging. Random Forest avoids correlated trees and hence is expected to perform better than Bagging. Here the case is not true.Further tuning of Random Forest model should be tried
 
 Full Grown Tree MSE: 5.288
+
 Pruned Tree MSE: 5.454
 Bagging Model MSE: 2.324
 Random Forest MSE: 2.518

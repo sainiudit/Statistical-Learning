@@ -371,13 +371,8 @@ importance(rf.car)</code></pre>
 <pre class="r"><code>rf.car.predict&lt;-predict(rf.car,car.test)
 mean((rf.car.predict-car.test$Sales)^2)</code></pre>
 <pre><code>## [1] 2.56628</code></pre>
-<p><br> Using Random Forest the MSE increased compared to bagging</p>
-<p>The important variables chosen by Random Forest are the same as the one chosen by Bagging</p>
-<p>Random Forest avoids correlated trees and hence is expected to perform better than Bagging. Here the case is not true.Further tuning of Random Forest model should be tried</p>
-<p>Full Grown Tree MSE: 5.288</p>
-<p>Pruned Tree MSE: 5.454</p>
-<p>Bagging Model MSE: 2.324</p>
-<p>Random Forest MSE: 2.518</p>
+<p><br> Using Random Forest the MSE increased compared to bagging. The important variables chosen by Random Forest are the same as the one chosen by Bagging. Random Forest avoids correlated trees and hence is expected to perform better than Bagging. Here the case is not true.Further tuning of Random Forest model should be tried</p>
+<p>Full Grown Tree MSE: 5.288 Pruned Tree MSE: 5.454 Bagging Model MSE: 2.324 Random Forest MSE: 2.518</p>
 </div>
 
 
