@@ -24,6 +24,6 @@ table(glm.pred, Direction.2005)
 mean(glm.pred == Direction.2005)
 
 
-## Summary of the Smaller model
+## Summary of the smaller model
 
 summary(glm.fit)
